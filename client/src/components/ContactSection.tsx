@@ -7,7 +7,9 @@ export default function ContactSection() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const fd = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+
     const payload = {
       name: String(fd.get("name") || ""),
       email: String(fd.get("email") || ""),
@@ -24,11 +26,16 @@ export default function ContactSection() {
         body: JSON.stringify(payload),
       });
 
-      if (!resp.ok) throw new Error("Request failed");
+      const data = await resp.json().catch(() => ({}));
+
+      if (!resp.ok) {
+        throw new Error(data?.error || "Request failed");
+      }
 
       setStatus("sent");
-      e.currentTarget.reset();
-    } catch {
+      form.reset();
+    } catch (error) {
+      console.error("CONTACT FORM ERROR:", error);
       setStatus("error");
     }
   }
@@ -103,6 +110,7 @@ export default function ContactSection() {
               rows={5}
               className="rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2"
             />
+
             <button
               disabled={status === "sending"}
               className="rounded-xl bg-zinc-100 px-4 py-2 text-sm font-semibold text-zinc-900 disabled:opacity-60"
@@ -113,6 +121,7 @@ export default function ContactSection() {
             {status === "sent" && (
               <p className="text-sm text-emerald-300">Sent! I’ll get back to you soon.</p>
             )}
+
             {status === "error" && (
               <p className="text-sm text-red-300">Something failed. Try again.</p>
             )}

@@ -22,7 +22,7 @@ export default function App() {
           <div className="grid gap-3 md:grid-cols-3">
             <SkillCard
               title="Frontend"
-              items={["React", "TypeScript", "Microfrontends", "Redux Toolkit", "Vite/webpack", "Tailwind", "Cypress"]}
+              items={["React", "TypeScript", "Microfrontends", "Redux Toolkit", "Vite/webpack", "Tailwind"]}
             />
             <SkillCard
               title="Frontend Architecture"
@@ -32,7 +32,23 @@ export default function App() {
               title="Realtime + Cloud"
               items={["WebSockets", "Kafka", "AWS (S3/CloudFront)", "CloudFlare", "CI/CD", "Monitoring"]}
             />
-          </div>
+
+          <SkillCard
+            title="Testing Strategies"
+            items={["Jest", "React Testing Library", "Cypress", "Jasmine"]}
+          />
+          <SkillCard
+            title="Tooling"
+            items={[
+              "Git",
+              "Docker",
+              "Webpack",
+              "Vite",
+              "ESLint",
+              "Prettier"
+            ]}
+          />
+                    </div>
         </Section>
 
         <Section title="Experience">

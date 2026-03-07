@@ -6,7 +6,7 @@ export const projects: Project[] = [
     description:
       "High-performance travel booking platform with Stripe integration and runtime MFE capabilities. Built for scale and visual fidelity.",
     stack: ["React", "TypeScript", "Vite", "WebSockets", "Stripe API", "NodeJS", "CloudFlare", "Render"],
-    githubUrl: "https://github.com/PujaGuptaTR/veloura-elite",
+    githubUrl: "https://github.com/guptapuja/veloura",
     liveUrl: "https://veloura-ck9.pages.dev/",
     accent: "from-amber-400/20 via-yellow-300/10 to-transparent",
     images: ["/projects/velora-1.png", "/projects/velora-2.png"],

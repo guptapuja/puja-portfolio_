@@ -12,21 +12,21 @@ export const experiences: ExperienceItem[] = [
     ],
   },
   {
+    title: "Zyient — SDE III",
+    meta: "ReactJS • AWS • TailwindCSS",
+    bullets: [
+      "Built data discovery platform UI with reusable components and clean UI architecture.",
+      "Deployed the platform through AWS, leveraging cloud-native practices for high availability and performance.",
+    ],
+  },
+  {
     title: "Maersk — Senior Engineer",
     meta: "Vue.js • ReactJS • Micro-frontends • Logistics dashboards",
     bullets: [
       "Built logistics dashboards using Vue.js and ReactJS within a micro-frontend architecture.",
       "Delivered reusable components and dynamic grid interfaces that enhanced data visibility and user interactions.",
       "Acted as both an individual contributor and a team coordinator, driving delivery excellence.",
-      "Contributed to solutions for Maersk Flow and Maersk Spot, improving customer experience and operational efficiency.",
-    ],
-  },
-  {
-    title: "Zyient — SDE III",
-    meta: "ReactJS • AWS • TailwindCSS",
-    bullets: [
-      "Built data discovery platform UI with reusable components and clean UI architecture.",
-      "Deployed the platform through AWS, leveraging cloud-native practices for high availability and performance.",
+      "Actively contributed to open-source projects, building components such as typeahead, virtual scroll, and more, fostering innovation and knowledge sharing within the engineering community.",
     ],
   },
   {
