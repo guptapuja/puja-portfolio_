@@ -7,7 +7,7 @@ export default function Hero() {
         <div className="relative grid items-center gap-10 md:grid-cols-[1.2fr_0.8fr]">
           <div>
             <p className="text-sm text-zinc-400">
-              Frontend Lead Engineer • React • Vue • NextJS • Distributed & Real-Time Systems
+              Frontend Lead Engineer 
             </p>
 
             <h1 className="mt-4 text-3xl font-semibold leading-tight tracking-tight md:text-2xl">
@@ -17,7 +17,7 @@ export default function Hero() {
             </h1>
 
             <p className="mt-5 max-w-xl text-sm leading-relaxed text-zinc-400">
-              React • TypeScript • Micro-frontends • WebSockets • Architecture • Performance Engineering
+              React • Vue • TypeScript • Micro-frontends • NextJS • Architecture • Distributed & Real-Time Systems
             </p>
 
             <div className="mt-7 flex flex-wrap gap-3">
