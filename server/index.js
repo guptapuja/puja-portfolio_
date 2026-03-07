@@ -14,7 +14,10 @@ app.use(express.json({ limit: "200kb" }));
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://puja-gupta-portfolio.pages.dev",
+    ],
   })
 );
 
