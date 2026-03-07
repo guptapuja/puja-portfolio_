@@ -6,7 +6,7 @@ export const projects: Project[] = [
     description:
       "High-performance travel booking platform with Stripe integration and runtime MFE capabilities. Built for scale and visual fidelity.",
     stack: ["React", "TypeScript", "Vite", "WebSockets", "Stripe API", "NodeJS", "CloudFlare", "Render"],
-    githubUrl: "https://github.com/guptapuja/veloura",
+    // githubUrl: "https://github.com/guptapuja/veloura",
     liveUrl: "https://veloura-ck9.pages.dev/",
     accent: "from-amber-400/20 via-yellow-300/10 to-transparent",
     images: ["/projects/velora-1.png", "/projects/velora-2.png"],
@@ -21,7 +21,7 @@ export const projects: Project[] = [
     description:
        "A distributed frontend shell that dynamically orchestrates remote micro-frontends using module federation, real-time communication, and fault-tolerant UI patterns.",
     stack: ["React", "TypeScript", "Node.js", "NextJS", "Framer Motion", "CloudFlare", "Render"],
-    githubUrl: "https://github.com/guptapuja/echopulse",
+    // githubUrl: "https://github.com/guptapuja/echopulse",
     liveUrl: "https://echopulse-ew8.pages.dev/",
     accent: "from-blue-500/20 via-cyan-400/10 to-transparent",
     images: ["/projects/echopulse.png"],
@@ -50,7 +50,7 @@ export const projects: Project[] = [
       "CloudFlare",
       "Render",
     ],
-    githubUrl: "https://github.com/guptapuja/realtime-chat",
+    // githubUrl: "https://github.com/guptapuja/realtime-chat",
     liveUrl: "https://lumina-dashboard-shell.pages.dev/",
     accent: "from-emerald-400/20 via-teal-300/10 to-transparent",
     images: ["/projects/chat.png"],

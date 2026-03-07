@@ -5,7 +5,7 @@ type Project = {
   title: string;
   description: string;
   stack: string[];
-  githubUrl: string;
+  // githubUrl: string;
   liveUrl: any;
   images: string[];
   highlights: string[];
@@ -125,7 +125,7 @@ export default function ProjectCard({ p }: { p: Project }) {
 
         <div className="mt-6 flex gap-3">
           <a
-            href={p.githubUrl}
+            // href={p.githubUrl}
             target="_blank"
             rel="noreferrer"
             className="rounded-xl bg-zinc-100 px-4 py-2 text-sm font-semibold text-zinc-900"

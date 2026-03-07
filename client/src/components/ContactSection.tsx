@@ -53,14 +53,14 @@ export default function ContactSection() {
             <a className="block underline text-zinc-200" href="mailto:puja.ec676@gmail.com">
               puja.ec676@gmail.com
             </a>
-            <a
+            {/* <a
               className="block underline text-zinc-200"
               href="https://github.com/guptapuja"
               target="_blank"
               rel="noreferrer"
             >
               GitHub: guptapuja
-            </a>
+            </a> */}
             <a
               className="block underline text-zinc-200"
               href="https://www.linkedin.com/in/puja-gupta-b6715a56/"

@@ -11,7 +11,7 @@ export default function TopBar() {
           <a href="#projects" className="text-zinc-300 hover:text-white">Projects</a>
           <a href="/resume.pdf" download className="text-zinc-300 hover:text-white">Resume</a>
           <a
-            href="https://github.com/guptapuja"
+            // href="https://github.com/guptapuja"
             target="_blank"
             rel="noreferrer"
             className="text-zinc-300 hover:text-white"
