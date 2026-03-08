@@ -40,7 +40,7 @@ export default function Hero() {
                 href="#contact-details"
                 className="rounded-xl border border-zinc-700 px-5 py-2.5 text-sm font-semibold"
               >
-                Contact Me
+                Contact Details
               </a>
             </div>
           </div>
