@@ -39,6 +39,47 @@ export default function ContactSection() {
   //     setStatus("error");
   //   }
   // }
+// async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+//   e.preventDefault();
+
+//   const form = e.currentTarget;
+//   const fd = new FormData(form);
+
+//   const payload = {
+//     name: String(fd.get("name") || ""),
+//     email: String(fd.get("email") || ""),
+//     message: String(fd.get("message") || ""),
+//   };
+
+//   setStatus("sending");
+
+//   try {
+//     const base = import.meta.env.VITE_API_BASE_URL;
+
+//     if (!base) {
+//       throw new Error("VITE_API_BASE_URL is missing");
+//     }
+
+//     const resp = await fetch(`${base}/api/contact`, {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify(payload),
+//     });
+
+//     const data = await resp.json().catch(() => ({}));
+
+//     if (!resp.ok) {
+//       throw new Error(data?.error || data?.details || "Request failed");
+//     }
+
+//     setStatus("sent");
+//     form.reset();
+//   } catch (error) {
+//     console.error("CONTACT FORM ERROR:", error);
+//     setStatus("error");
+//   }
+// }
+
 async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
   e.preventDefault();
 
@@ -55,11 +96,6 @@ async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
 
   try {
     const base = import.meta.env.VITE_API_BASE_URL;
-
-    if (!base) {
-      throw new Error("VITE_API_BASE_URL is missing");
-    }
-
     const resp = await fetch(`${base}/api/contact`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -69,16 +105,19 @@ async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     const data = await resp.json().catch(() => ({}));
 
     if (!resp.ok) {
-      throw new Error(data?.error || data?.details || "Request failed");
+      throw new Error(data?.error || `Request failed with ${resp.status}`);
     }
 
     setStatus("sent");
     form.reset();
   } catch (error) {
     console.error("CONTACT FORM ERROR:", error);
+    alert(error instanceof Error ? error.message : "Something went wrong");
     setStatus("error");
   }
 }
+
+
   return (
     <Section title="Contact Details">
       <div className="grid gap-6 md:grid-cols-2">

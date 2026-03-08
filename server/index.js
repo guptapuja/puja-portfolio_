@@ -17,102 +17,54 @@ app.use(
 );
 
 app.get("/health", (req, res) => {
-  res.json({ ok: true });
+  res.json({
+    ok: true,
+    mailUserExists: !!process.env.MAIL_USER,
+    mailPassExists: !!process.env.MAIL_PASS,
+  });
 });
-
-// const transporter = nodemailer.createTransport({
-//   service: "gmail",
-//   auth: {
-//     user: process.env.MAIL_USER,
-//     pass: process.env.MAIL_PASS,
-//   },
-// });
-
-// const transporter = nodemailer.createTransport({
-//   host: "smtp.gmail.com",
-//   port: 587,
-//   secure: false, // Use STARTTLS
-//   auth: {
-//     user: process.env.MAIL_USER,
-//     pass: process.env.MAIL_PASS,
-//   },
-//   // This forces IPv4 and helps resolve ENETUNREACH
-//   dnsLookup: (hostname, options, callback) => {
-//     require('dns').lookup(hostname, { family: 4 }, callback);
-//   }
-// });
-
-// const transporter = nodemailer.createTransport({
-//   host: "smtp.gmail.com",
-//   port: 587,
-//   secure: false, // Must be false for port 587 (STARTTLS)
-//   auth: {
-//     user: process.env.MAIL_USER,
-//     pass: process.env.MAIL_PASS,
-//   },
-//   // Force IPv4 to resolve the ENETUNREACH issue
-//   dnsLookup: (hostname, options, callback) => {
-//     require('dns').lookup(hostname, { family: 4 }, callback);
-//   },
-//   // Increase timeout to prevent the "stuck" feeling
-//   connectionTimeout: 10000, // 10 seconds
-//   greetingTimeout: 10000,
-//   socketTimeout: 10000,
-// });
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // Must be false for 587
+  service: "gmail",
   auth: {
     user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS, // MUST be a 16-character App Password
+    pass: process.env.MAIL_PASS,
   },
-  // This is the critical part to fix ENETUNREACH
-  dnsLookup: (hostname, options, callback) => {
-    require('dns').lookup(hostname, { family: 4 }, callback);
-  }
 });
-
 
 app.post("/api/contact", async (req, res) => {
   try {
     const { name, email, message } = req.body;
 
     if (!name || !email || !message) {
-      return res.status(400).json({
-        error: "Missing required fields",
-      });
+      return res.status(400).json({ error: "Missing required fields" });
     }
+
+    await transporter.verify();
 
     await transporter.sendMail({
       from: `"Portfolio Contact" <${process.env.MAIL_USER}>`,
-      to: process.env.MAIL_TO,
+      to: process.env.MAIL_USER,
       replyTo: email,
       subject: `Portfolio message from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-      html: `
-        <h2>New Contact Form Message</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message.replace(/\n/g, "<br />")}</p>
+      text: `
+Name: ${name}
+Email: ${email}
+
+Message:
+${message}
       `,
     });
 
-    res.json({
-      success: true,
-      message: "Email sent successfully",
-    });
+    return res.status(200).json({ ok: true, message: "Email sent" });
   } catch (error) {
     console.error("CONTACT API ERROR:", error);
-    res.status(500).json({
-      error: "Email failed",
-      details: error.message,
+    return res.status(500).json({
+      error: error.message || "Failed to send email",
     });
   }
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
