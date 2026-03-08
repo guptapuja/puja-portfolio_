@@ -16,6 +16,14 @@ app.use(
   })
 );
 
+import rateLimit from "express-rate-limit";
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+});
+
+app.use("/api/contact", limiter);
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 app.get("/health", (_req, res) => {
@@ -57,6 +65,10 @@ ${message}`,
       error: error?.message || "Failed to send email",
     });
   }
+});
+
+app.get("/api/contact", (req, res) => {
+  res.status(405).send("Method not allowed");
 });
 
 app.listen(PORT, () => {
