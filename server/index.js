@@ -1,3 +1,4 @@
+import dns from "node:dns";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -25,6 +26,32 @@ const limiter = rateLimit({
   windowMs: 60 * 1000,
   max: 20,
 });
+
+const gmailHost = await dns.promises.lookup("smtp.gmail.com", { family: 4 });
+const transporter = nodemailer.createTransport({
+  host: gmailHost.address,
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
+  },
+  tls: {
+    servername: "smtp.gmail.com",
+  },
+  connectionTimeout: 60000,
+  greetingTimeout: 60000,
+  socketTimeout: 60000,
+});
+
+
+// await transporter.sendMail({
+//   from: `"Portfolio Contact" <${process.env.MAIL_USER}>`,
+//   to: process.env.MAIL_TO || process.env.MAIL_USER,
+//   replyTo: email,
+//   subject: `Portfolio Contact from ${name}`,
+//   text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+// });
 
 app.use("/api/contact", limiter);
 
@@ -79,23 +106,119 @@ app.get("/health", (_req, res) => {
 //     });
 //   }
 // });
+// app.post("/api/contact", async (req, res) => {
+//   try {
+//     const { name, email, message } = req.body || {};
+
+//     if (!name || !email || !message) {
+//       return res.status(400).json({ error: "All fields are required" });
+//     }
+
+//     // const transporter = nodemailer.createTransport({
+//     //   service: "gmail",
+//     //   auth: {
+//     //     user: process.env.MAIL_USER,
+//     //     pass: process.env.MAIL_PASS,
+//     //   },
+//     // });
+//     const transporter = nodemailer.createTransport({
+//   host: "smtp.gmail.com",
+//   port: 465,
+//   secure: true, // true for 465
+//   auth: {
+//     user: process.env.MAIL_USER,
+//     pass: process.env.MAIL_PASS, // Gmail App Password (16 chars, no spaces)
+//   },
+//   connectionTimeout: 60000,
+//   greetingTimeout: 60000,
+//   socketTimeout: 60000,
+// });
+
+//     await transporter.verify();
+
+//     await transporter.sendMail({
+//       from: `"Portfolio Contact" <${process.env.MAIL_USER}>`,
+//       to: process.env.MAIL_TO || process.env.MAIL_USER,
+//       replyTo: email,
+//       subject: `Portfolio Contact from ${name}`,
+//       text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+//     });
+
+//     return res.json({ ok: true, message: "Email sent successfully" });
+//   } catch (error) {
+//     console.error("CONTACT API ERROR:", error);
+//     return res.status(500).json({
+//       error: "Email failed",
+//       details: error?.message || "Unknown error",
+//     });
+//   }
+// });
+
+
+// app.post("/api/contact", async (req, res) => {
+//   try {
+//     const { name, email, message } = req.body || {};
+
+//     if (!name || !email || !message) {
+//       return res.status(400).json({ error: "All fields are required" });
+//     }
+
+//     const gmailHost = await dns.promises.lookup("smtp.gmail.com", { family: 4 });
+
+//     const transporter = nodemailer.createTransport({
+//       host: gmailHost.address,
+//       port: 465,
+//       secure: true,
+//       auth: {
+//         user: process.env.MAIL_USER,
+//         pass: process.env.MAIL_PASS,
+//       },
+//       tls: {
+//         servername: "smtp.gmail.com",
+//       },
+//       connectionTimeout: 60000,
+//       greetingTimeout: 60000,
+//       socketTimeout: 60000,
+//     });
+
+//     await transporter.sendMail({
+//       from: `"Portfolio Contact" <${process.env.MAIL_USER}>`,
+//       to: process.env.MAIL_TO || process.env.MAIL_USER,
+//       replyTo: email,
+//       subject: `Portfolio Contact from ${name}`,
+//       text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+//     });
+
+//     return res.json({ ok: true, message: "Email sent successfully" });
+//   } catch (error) {
+//     console.error("CONTACT API ERROR:", error);
+//     return res.status(500).json({
+//       error: "Email failed",
+//       details: error?.message || "Unknown error",
+//     });
+//   }
+// });
+
+
 app.post("/api/contact", async (req, res) => {
   try {
-    const { name, email, message } = req.body || {};
+    const { name, email, message } = req.body;
 
     if (!name || !email || !message) {
-      return res.status(400).json({ error: "All fields are required" });
+      return res.status(400).json({
+        error: "All fields are required",
+      });
     }
 
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
       },
     });
-
-    await transporter.verify();
 
     await transporter.sendMail({
       from: `"Portfolio Contact" <${process.env.MAIL_USER}>`,
@@ -105,15 +228,17 @@ app.post("/api/contact", async (req, res) => {
       text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
     });
 
-    return res.json({ ok: true, message: "Email sent successfully" });
+    res.json({ ok: true });
   } catch (error) {
     console.error("CONTACT API ERROR:", error);
-    return res.status(500).json({
+
+    res.status(500).json({
       error: "Email failed",
-      details: error?.message || "Unknown error",
+      details: error.message,
     });
   }
 });
+
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
