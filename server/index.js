@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 dotenv.config();
 
@@ -16,20 +16,14 @@ app.use(
   })
 );
 
-app.get("/health", (req, res) => {
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+app.get("/health", (_req, res) => {
   res.json({
     ok: true,
-    mailUserExists: !!process.env.MAIL_USER,
-    mailPassExists: !!process.env.MAIL_PASS,
+    resendKeyExists: !!process.env.RESEND_API_KEY,
+    mailToExists: !!process.env.MAIL_TO,
   });
-});
-
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  },
 });
 
 app.post("/api/contact", async (req, res) => {
@@ -40,27 +34,27 @@ app.post("/api/contact", async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    await transporter.verify();
-
-    await transporter.sendMail({
-      from: `"Portfolio Contact" <${process.env.MAIL_USER}>`,
-      to: process.env.MAIL_USER,
+    const response = await resend.emails.send({
+      from: "Portfolio Contact <onboarding@resend.dev>",
+      to: process.env.MAIL_TO,
       replyTo: email,
       subject: `Portfolio message from ${name}`,
-      text: `
-Name: ${name}
+      text: `Name: ${name}
 Email: ${email}
 
 Message:
-${message}
-      `,
+${message}`,
     });
 
-    return res.status(200).json({ ok: true, message: "Email sent" });
+    return res.status(200).json({
+      ok: true,
+      id: response.data?.id,
+    });
   } catch (error) {
     console.error("CONTACT API ERROR:", error);
+
     return res.status(500).json({
-      error: error.message || "Failed to send email",
+      error: error?.message || "Failed to send email",
     });
   }
 });
