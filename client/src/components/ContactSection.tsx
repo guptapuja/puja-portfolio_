@@ -4,42 +4,81 @@ import Section from "./Section";
 export default function ContactSection() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  // async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  //   e.preventDefault();
 
-    const form = e.currentTarget;
-    const fd = new FormData(form);
+  //   const form = e.currentTarget;
+  //   const fd = new FormData(form);
 
-    const payload = {
-      name: String(fd.get("name") || ""),
-      email: String(fd.get("email") || ""),
-      message: String(fd.get("message") || ""),
-    };
+  //   const payload = {
+  //     name: String(fd.get("name") || ""),
+  //     email: String(fd.get("email") || ""),
+  //     message: String(fd.get("message") || ""),
+  //   };
 
-    setStatus("sending");
+  //   setStatus("sending");
 
-    try {
-      const base = import.meta.env.VITE_API_BASE_URL;
-      const resp = await fetch(`${base}/api/contact`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+  //   try {
+  //     const base = import.meta.env.VITE_API_BASE_URL;
+  //     const resp = await fetch(`${base}/api/contact`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(payload),
+  //     });
 
-      const data = await resp.json().catch(() => ({}));
+  //     const data = await resp.json().catch(() => ({}));
 
-      if (!resp.ok) {
-        throw new Error(data?.error || "Request failed");
-      }
+  //     if (!resp.ok) {
+  //       throw new Error(data?.error || "Request failed");
+  //     }
 
-      setStatus("sent");
-      form.reset();
-    } catch (error) {
-      console.error("CONTACT FORM ERROR:", error);
-      setStatus("error");
+  //     setStatus("sent");
+  //     form.reset();
+  //   } catch (error) {
+  //     console.error("CONTACT FORM ERROR:", error);
+  //     setStatus("error");
+  //   }
+  // }
+async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+
+  const form = e.currentTarget;
+  const fd = new FormData(form);
+
+  const payload = {
+    name: String(fd.get("name") || ""),
+    email: String(fd.get("email") || ""),
+    message: String(fd.get("message") || ""),
+  };
+
+  setStatus("sending");
+
+  try {
+    const base = import.meta.env.VITE_API_BASE_URL;
+
+    if (!base) {
+      throw new Error("VITE_API_BASE_URL is missing");
     }
-  }
 
+    const resp = await fetch(`${base}/api/contact`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await resp.json().catch(() => ({}));
+
+    if (!resp.ok) {
+      throw new Error(data?.error || data?.details || "Request failed");
+    }
+
+    setStatus("sent");
+    form.reset();
+  } catch (error) {
+    console.error("CONTACT FORM ERROR:", error);
+    setStatus("error");
+  }
+}
   return (
     <Section title="Contact Details">
       <div className="grid gap-6 md:grid-cols-2">
