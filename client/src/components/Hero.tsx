@@ -53,7 +53,7 @@ export default function Hero() {
                 <img
                   src="/puja.png"
                   alt="Puja Gupta"
-                  className="h-full w-full object-cover"
+                  className="h-[106%] w-full object-cover"
                 />
               </div>
             </div>
