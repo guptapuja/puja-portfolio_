@@ -28,20 +28,36 @@ app.get("/health", (req, res) => {
 //   },
 // });
 
+// const transporter = nodemailer.createTransport({
+//   host: "smtp.gmail.com",
+//   port: 587,
+//   secure: false, // Use STARTTLS
+//   auth: {
+//     user: process.env.MAIL_USER,
+//     pass: process.env.MAIL_PASS,
+//   },
+//   // This forces IPv4 and helps resolve ENETUNREACH
+//   dnsLookup: (hostname, options, callback) => {
+//     require('dns').lookup(hostname, { family: 4 }, callback);
+//   }
+// });
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
-  secure: false, // Use STARTTLS
+  secure: false, // Must be false for port 587 (STARTTLS)
   auth: {
     user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASS,
   },
-  // This forces IPv4 and helps resolve ENETUNREACH
+  // Force IPv4 to resolve the ENETUNREACH issue
   dnsLookup: (hostname, options, callback) => {
     require('dns').lookup(hostname, { family: 4 }, callback);
-  }
+  },
+  // Increase timeout to prevent the "stuck" feeling
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
 });
-
 app.post("/api/contact", async (req, res) => {
   try {
     const { name, email, message } = req.body;
