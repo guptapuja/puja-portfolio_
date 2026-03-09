@@ -1,2 +1,11 @@
 User-agent: *
 Allow: /
+
+Exclude private paths
+
+Disallow: /api/
+Disallow: /admin/
+
+Correct sitemap URL
+
+Sitemap: https://www.google.com/search?q=https://puja-gupta-portfolio.pages.dev/sitemap.xml
