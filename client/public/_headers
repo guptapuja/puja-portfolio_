@@ -1,10 +1,7 @@
 /*
-  X-Frame-Options: SAMEORIGIN
-  X-Content-Type-Options: nosniff
-  Referrer-Policy: strict-origin-when-cross-origin
-  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-* **Filename: `robots.txt`**
-```text
-User-agent: *
-Allow: /
-Sitemap: https://puja-gupta-portfolio.pages.dev/sitemap.xml
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://www.google.com/search?q=https://fonts.googleapis.com; font-src 'self' https://www.google.com/search?q=https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google.com/search?q=https://puja-portfolio-api.onrender.com;
