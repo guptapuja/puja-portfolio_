@@ -2,21 +2,25 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { Resend } from "resend";
+import rateLimit from "express-rate-limit";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 app.use(express.json());
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://puja-gupta-portfolio.pages.dev",
+    ],
   })
 );
-
-import rateLimit from "express-rate-limit";
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -24,14 +28,9 @@ const limiter = rateLimit({
 });
 
 app.use("/api/contact", limiter);
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 app.get("/health", (_req, res) => {
-  res.json({
-    ok: true,
-    resendKeyExists: !!process.env.RESEND_API_KEY,
-    mailToExists: !!process.env.MAIL_TO,
-  });
+  res.json({ ok: true });
 });
 
 app.post("/api/contact", async (req, res) => {
@@ -47,11 +46,7 @@ app.post("/api/contact", async (req, res) => {
       to: process.env.MAIL_TO,
       replyTo: email,
       subject: `Portfolio message from ${name}`,
-      text: `Name: ${name}
-Email: ${email}
-
-Message:
-${message}`,
+      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
     });
 
     return res.status(200).json({
@@ -67,10 +62,11 @@ ${message}`,
   }
 });
 
-app.get("/api/contact", (req, res) => {
+app.get("/api/contact", (_req, res) => {
   res.status(405).send("Method not allowed");
 });
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
