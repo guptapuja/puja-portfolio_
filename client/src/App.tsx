@@ -7,22 +7,38 @@ import SnapshotSection from "./components/SnapshotSection";
 import Timeline from "./components/Timeline";
 import TopBar from "./components/TopBar";
 import { projects } from "./data/projects";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function App() {
-    useEffect(() => {
-    if (localStorage.getItem("portfolio_blocked") === "true") {
-      document.body.innerHTML = "";
-      return;
-    }
+ const [blocked, setBlocked] = useState(
+    localStorage.getItem("portfolio_blocked") === "true"
+  );
+
+  useEffect(() => {
+    if (blocked) return;
 
     const timer = setTimeout(() => {
       localStorage.setItem("portfolio_blocked", "true");
-      window.location.reload();
+      setBlocked(true);
     }, 60 * 1000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [blocked]);
+
+  if (blocked) {
+    return (
+      <div className="min-h-screen bg-zinc-950 text-zinc-100 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-3xl font-semibold mb-3">
+            Access Restricted
+          </h1>
+          <p className="text-zinc-400">
+            Your access has expired.
+          </p>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
