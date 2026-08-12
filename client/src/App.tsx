@@ -7,8 +7,23 @@ import SnapshotSection from "./components/SnapshotSection";
 import Timeline from "./components/Timeline";
 import TopBar from "./components/TopBar";
 import { projects } from "./data/projects";
+import { useEffect } from "react";
 
 export default function App() {
+    useEffect(() => {
+    if (localStorage.getItem("portfolio_blocked") === "true") {
+      document.body.innerHTML = "";
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      localStorage.setItem("portfolio_blocked", "true");
+      window.location.reload();
+    }, 60 * 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+  
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
       <TopBar />
