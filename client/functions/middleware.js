@@ -1,9 +1,18 @@
-
 const COOKIE_NAME = "puja_visit_count";
 const MAX_VISITS = 2;
 
 export async function onRequest(context) {
   const { request, next } = context;
+  const url = new URL(request.url);
+
+  // Only count actual page navigation, not JS/CSS/images/API requests
+  const isPageRequest =
+    request.method === "GET" &&
+    request.headers.get("Sec-Fetch-Dest") === "document";
+
+  if (!isPageRequest) {
+    return next();
+  }
 
   const cookieHeader = request.headers.get("Cookie") || "";
 
@@ -11,19 +20,18 @@ export async function onRequest(context) {
     new RegExp(`${COOKIE_NAME}=([^;]+)`)
   );
 
-  let visitCount = match ? parseInt(match[1], 10) : 0;
+  let visitCount = match ? Number(match[1]) : 0;
 
-  visitCount += 1;
-
-  // Block from the 3rd visit onward
-  if (visitCount > MAX_VISITS) {
+  // Already visited twice → BLOCK
+  if (visitCount >= MAX_VISITS) {
     return new Response(
       `
       <!DOCTYPE html>
       <html>
         <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>Access Restricted</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
           <style>
             body {
               margin: 0;
@@ -31,9 +39,9 @@ export async function onRequest(context) {
               display: flex;
               align-items: center;
               justify-content: center;
-              font-family: Arial, sans-serif;
               background: #faf7fb;
               color: #333;
+              font-family: Arial, sans-serif;
               text-align: center;
             }
 
@@ -48,7 +56,6 @@ export async function onRequest(context) {
 
             p {
               color: #666;
-              line-height: 1.6;
             }
           </style>
         </head>
@@ -65,11 +72,14 @@ export async function onRequest(context) {
         status: 403,
         headers: {
           "Content-Type": "text/html; charset=UTF-8",
-          "Cache-Control": "no-store"
-        }
+          "Cache-Control": "no-store",
+        },
       }
     );
   }
+
+  // Count this page visit
+  visitCount += 1;
 
   const response = await next();
 
@@ -83,6 +93,6 @@ export async function onRequest(context) {
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
-    headers
+    headers,
   });
 }
