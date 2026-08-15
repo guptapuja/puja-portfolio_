@@ -20,7 +20,7 @@ export default function App() {
     const timer = setTimeout(() => {
       localStorage.setItem("portfolio_blocked", "true");
       setBlocked(true);
-    }, 60 * 1000);
+    }, 2 * 60 * 1000); 
 
     return () => clearTimeout(timer);
   }, [blocked]);
